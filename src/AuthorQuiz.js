@@ -13,9 +13,23 @@ function Hero(){
     </div>
   )
 }
+function Book({title}){
+  return(<div className="answer">
+      <h4>{title}</h4>
+    </div>)
+}
+function Turn({author,books}){
+  return(
+    <div className="row turn" style={{backgroundColor:"white"}}>
+    <div className="col-4 offset-1">
+      <img src={author.imageUrl} className="authorimage" alth="Author"/>
+    </div>
+    <div className="col-6">
+      {books.map((title) => <Book title={title} key={title}/>)}
+    </div>
 
-function Turn(){
-  return(<div></div>);
+    </div>
+  );
 }
 function Continue(){
   return(<div></div>);
@@ -34,18 +48,17 @@ function Footer() {
 
 
 
-class AuthorQuiz extends Component {
-  render() {
+function AuthorQuiz({turnData}) {
     return (
     <div className="container-fluid">
     <Hero/>
-    <Turn/>
+    <Turn{...turnData}/>
     <Continue/>
     <Footer/>
     </div>
   );
 }
-}
+
 
 /*
 
