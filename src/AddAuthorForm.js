@@ -7,7 +7,7 @@ class AuthorForm extends Component{
     this.state = {
       name:'',
       imageUrl:'',
-      books:['a','b'],
+      books:[],
       bookTemp:''
     }
     this.onFieldChange=this.onFieldChange.bind(this);
