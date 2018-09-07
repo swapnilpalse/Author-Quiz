@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './AuthorQuiz.css';
 import './bootstrap.min.css';
-
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 function Hero(){
   return(
     <div className="row">
@@ -13,24 +14,42 @@ function Hero(){
     </div>
   )
 }
-function Book({title}){
-  return(<div className="answer">
+function Book({title, onClick}){
+  return(<div className="answer" onClick={()=>{onClick(title);}} alt="Author">
       <h4>{title}</h4>
     </div>)
 }
-function Turn({author,books}){
-  return(
-    <div className="row turn" style={{backgroundColor:"white"}}>
+function Turn({author,books,highlight,onAnswerSelected}){
+  function highlightToBgColor(highlight) {
+    const mapping = {
+      'none': '',
+      'correct': 'green',
+      'wrong': 'red'
+    };
+    return mapping[highlight];
+}
+  return (<div className="row turn" style={{backgroundColor: highlightToBgColor(highlight)}}>
     <div className="col-4 offset-1">
       <img src={author.imageUrl} className="authorimage" alth="Author"/>
     </div>
     <div className="col-6">
-      {books.map((title) => <Book title={title} key={title}/>)}
+      {books.map((title) => <Book title={title} key={title} onClick={onAnswerSelected}/>)}
     </div>
 
     </div>
   );
 }
+Turn.propTypes = {
+  author: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    imageSource: PropTypes.string.isRequired,
+    books: PropTypes.arrayOf(PropTypes.string).isRequired
+  }),
+  books: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onAnswerSelected: PropTypes.func.isRequired,
+  highlight: PropTypes.string.isRequired
+};
 function Continue(){
   return(<div></div>);
 }
@@ -48,21 +67,20 @@ function Footer() {
 
 
 
-function AuthorQuiz({turnData}) {
+function AuthorQuiz({turnData,highlight,onAnswerSelected}) {
     return (
     <div className="container-fluid">
     <Hero/>
-    <Turn{...turnData}/>
+    <Turn{...turnData} highlight={highlight} onAnswerSelected={onAnswerSelected}/>
     <Continue/>
+    <p><Link to="/add">Add Author</Link></p>
     <Footer/>
     </div>
   );
 }
 
 
-/*
 
-*/
 
 
 export default AuthorQuiz;

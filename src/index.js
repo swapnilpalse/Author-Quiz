@@ -4,6 +4,7 @@ import './index.css';
 import  AuthorQuiz from './AuthorQuiz.js';
 import registerServiceWorker from './registerServiceWorker';
 import {shuffle, sample} from 'underscore';
+import {BrowserRouter, Route} from 'react-router-dom';
 const authors =[
     {
       name: 'Mark Twain',
@@ -59,8 +60,42 @@ function getTurnData(authors){
   }
 
 }
-const state={
-  turnData:getTurnData(authors)
-};
-ReactDOM.render(<AuthorQuiz author{...state} b/>, document.getElementById('root'));
+function resetState() {
+  return {
+    turnData: getTurnData(authors),
+    highlight: ''
+  };
+}
+
+let state = resetState();
+function onAnswerSelected(answer){
+  const isCorrect=state.turnData.author.books.some((book)=>book===answer);
+  state.highlight=isCorrect?'correct':'wrong';
+  render();
+}
+
+function App(){
+  return <AuthorQuiz {...state} onAnswerSelected={onAnswerSelected} onContinue={()=>{
+    state=resetState();
+    render();
+  }}/>;
+}
+
+
+function AddAuthorForm({match}){
+  return (<div>
+    <h1>
+    Add Author
+    </h1>
+    <p>{JSON.stringify(match)}</p>
+  </div>)
+}
+function render(){
+ReactDOM.render(<BrowserRouter><React.Fragment><Route exact path="/" component={App}/>
+                              <Route path="/add" component={AddAuthorForm}/>
+                              </React.Fragment>
+                </BrowserRouter>, document.getElementById('root'));
+}
+render();
+
 registerServiceWorker();
