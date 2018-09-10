@@ -80,28 +80,14 @@ function reducer(state={authors,turnData:getTurnData(authors),highlight:''},acti
                         highlight:'',
                         turnData:getTurnData(state.authors)
                       });
+    case 'ADD_AUTHOR' :   return Object.assign({},state,{
+                          authors:state.authors.concat([action.author])
+                        })
     default: return state;
   }
-  return state;
+
 }
 let store= Redux.createStore(reducer);
-
-
-
-
-
-function App(){
-  return <ReactRedux.Provider store={store}><AuthorQuiz/>
-  </ReactRedux.Provider>;
-}
-
-
-const AuthorWrapper=withRouter(({history})=>{
-  return <AddAuthorForm onAddAuthor={(author)=>{
-    authors.push(author);
-    history.push('/');
-  }}/>;
-});
 
 ReactDOM.render(
   <BrowserRouter>
